@@ -14,8 +14,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Poke Dashboard",
-  description: "A Pokémon dashboard built with Next.js and Supabase",
+  title: {
+    default: "TeamDex",
+    template: "%s | TeamDex",
+  },
+  description: "Build smarter Pokemon teams with saved rosters and type coverage analysis.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

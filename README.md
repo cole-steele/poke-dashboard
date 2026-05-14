@@ -1,6 +1,6 @@
-# Poke Dashboard
+# TeamDex
 
-A full-stack Pokemon dashboard for browsing the original Pokedex, saving favorites, and building reusable teams with type coverage analysis.
+TeamDex is a full-stack Pokemon team builder for browsing the original Pokedex, saving favorites, and building reusable teams with type coverage analysis.
 
 The app combines public PokeAPI data with authenticated user data stored in Supabase. Visitors can browse Pokemon, inspect detailed stats and evolution chains, and sign in to save Pokemon, manage a six-slot team, and store named team templates.
 
@@ -27,7 +27,7 @@ The app combines public PokeAPI data with authenticated user data stored in Supa
 
 ## Architecture
 
-The project uses the Next.js App Router with server-first data loading. Public Pokemon data is fetched on the server from PokeAPI and cached with `revalidate` settings, while authenticated user data is read through Supabase server clients.
+The project uses the Next.js App Router with server-first data loading. The Gen 1 list used by the dashboard and team picker is stored locally in `src/data/pokemon-list.json` for fast, reliable renders. Detail pages still fetch richer Pokemon, species, evolution, ability, and move data from PokeAPI with `revalidate` settings, while authenticated user data is read through Supabase server clients.
 
 Server Actions in `src/app/actions` handle mutations for auth, bookmarks, team slots, and saved templates. Interactive UI is isolated into client components such as `PokemonGrid`, `TeamBuilder`, `BookmarkButton`, and `MobileNav`.
 
@@ -112,6 +112,7 @@ npm run dev     # Start the local Next.js dev server
 npm run build   # Create a production build
 npm run start   # Run the production build
 npm run lint    # Run ESLint
+npm run generate:pokemon # Refresh the local Gen 1 list data from PokeAPI
 ```
 
 ## Portfolio Notes

@@ -30,7 +30,7 @@ export default function LoginForm({ nextPath }: { nextPath: string }) {
 
   return (
     <div className={styles.card}>
-      <h1 className={styles.title}>Poke Dashboard</h1>
+      <h1 className={styles.title}>TeamDex</h1>
 
       <div className={styles.tabs}>
         <button

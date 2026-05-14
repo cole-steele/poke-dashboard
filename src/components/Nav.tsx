@@ -15,10 +15,12 @@ export default async function Nav() {
     <nav className={styles.nav}>
       <Link href="/" className={styles.logo}>
         <PokeballIcon size={18} />
-        Poke Dashboard
+        TeamDex
       </Link>
       <div className={styles.right}>
-        <Link href="/team" className={styles.navLink}>Team</Link>
+        <Link href="/" className={styles.navLink}>Pokédex</Link>
+        <Link href="/team" className={styles.navLink}>Team Builder</Link>
+        <div className={styles.divider} />
         {user ? (
           <>
             <span className={styles.email}>{user.email}</span>
