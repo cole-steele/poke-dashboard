@@ -89,11 +89,7 @@ export default function PokemonGrid({
   function toggleType(type: string) {
     setSelectedTypes((prev) => {
       const next = new Set(prev);
-      if (next.has(type)) {
-        next.delete(type);
-      } else {
-        next.add(type);
-      }
+      next.has(type) ? next.delete(type) : next.add(type);
       return next;
     });
   }
@@ -116,11 +112,7 @@ export default function PokemonGrid({
     setActionError(null);
     setLocalBookmarks((prev) => {
       const next = new Set(prev);
-      if (next.has(name)) {
-        next.delete(name);
-      } else {
-        next.add(name);
-      }
+      next.has(name) ? next.delete(name) : next.add(name);
       return next;
     });
     setPendingBookmarks((prev) => new Set(prev).add(name));
@@ -129,11 +121,7 @@ export default function PokemonGrid({
       if (result.error) {
         setLocalBookmarks((prev) => {
           const next = new Set(prev);
-          if (wasBookmarked) {
-            next.add(name);
-          } else {
-            next.delete(name);
-          }
+          wasBookmarked ? next.add(name) : next.delete(name);
           return next;
         });
         setActionError(result.error);
@@ -146,11 +134,7 @@ export default function PokemonGrid({
       }
       setLocalBookmarks((prev) => {
         const next = new Set(prev);
-        if (result.bookmarked) {
-          next.add(name);
-        } else {
-          next.delete(name);
-        }
+        result.bookmarked ? next.add(name) : next.delete(name);
         return next;
       });
       setPendingBookmarks((prev) => {
@@ -171,6 +155,7 @@ export default function PokemonGrid({
   return (
     <div className={styles.wrapper}>
       {actionError && <p className={styles.errorMessage}>{actionError}</p>}
+
       {/* Search + sort */}
       <div className={styles.controlBar}>
         <input
@@ -206,10 +191,7 @@ export default function PokemonGrid({
       <div className={styles.filterRow}>
         <div className={styles.selectedBox}>
           {savedOnly && (
-            <button
-              className={styles.activeTag}
-              onClick={() => setSavedOnly(false)}
-            >
+            <button className={styles.activeTag} onClick={() => setSavedOnly(false)}>
               ★ Saved <span className={styles.tagX}>×</span>
             </button>
           )}
@@ -293,6 +275,7 @@ export default function PokemonGrid({
           </p>
         </div>
       )}
+      <a href="#top" className={styles.backToTop}>Back to top</a>
     </div>
   );
 }

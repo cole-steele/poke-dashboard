@@ -346,3 +346,29 @@
   line-height: 1.45;
   opacity: 0.55;
 }
+
+.backToTop {
+  align-self: center;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: var(--foreground);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  opacity: 0.62;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    opacity: 1;
+    border-color: #888;
+  }
+
+  @include m.dark {
+    border-color: #333;
+
+    &:hover {
+      border-color: #888;
+    }
+  }
+}
