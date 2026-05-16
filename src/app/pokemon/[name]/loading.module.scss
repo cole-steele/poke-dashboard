@@ -1,0 +1,85 @@
+@use '@/styles/mixins' as m;
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.page {
+  min-height: 100vh;
+  background-color: var(--background);
+  padding: 48px 24px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.bone {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    #e0e0e0 25%,
+    #ececec 50%,
+    #e0e0e0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+
+  @include m.dark {
+    background: linear-gradient(
+      90deg,
+      #2a2a2a 25%,
+      #333 50%,
+      #2a2a2a 75%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+.header {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+
+  @include m.respond-to(sm) {
+    flex-direction: column;
+  }
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  flex: 1;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statRow {
+  display: grid;
+  grid-template-columns: 140px 40px 1fr;
+  gap: 12px;
+  align-items: center;
+}

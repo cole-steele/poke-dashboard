@@ -1,0 +1,44 @@
+@use '@/styles/mixins' as m;
+
+.page {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--foreground);
+}
+
+.number {
+  font-size: 80px;
+  font-weight: 700;
+  letter-spacing: -4px;
+  opacity: 0.08;
+  margin: 0;
+  line-height: 1;
+}
+
+.heading {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.sub {
+  font-size: 15px;
+  opacity: 0.5;
+  margin: 0;
+}
+
+.back {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--foreground);
+  opacity: 0.6;
+  text-decoration: none;
+
+  &:hover { opacity: 1; }
+}
