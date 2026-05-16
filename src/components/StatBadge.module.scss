@@ -1,0 +1,37 @@
+@use '@/styles/mixins' as m;
+
+%base {
+  display: inline;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.physical {
+  @extend %base;
+  background: rgba(239, 108, 0, 0.12);
+  color: #c8591a;
+  border: 1px solid rgba(239, 108, 0, 0.25);
+
+  @include m.dark {
+    background: rgba(239, 108, 0, 0.15);
+    color: #ffb74d;
+    border-color: rgba(239, 108, 0, 0.3);
+  }
+}
+
+.special {
+  @extend %base;
+  background: rgba(123, 31, 162, 0.12);
+  color: #7b1fa2;
+  border: 1px solid rgba(123, 31, 162, 0.25);
+
+  @include m.dark {
+    background: rgba(123, 31, 162, 0.15);
+    color: #ce93d8;
+    border-color: rgba(123, 31, 162, 0.3);
+  }
+}
