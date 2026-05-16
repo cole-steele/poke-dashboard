@@ -1,0 +1,65 @@
+@use '@/styles/mixins' as m;
+
+.wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.trigger {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: var(--foreground);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s ease;
+
+  &:hover { opacity: 0.7; }
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  background: var(--background);
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  opacity: 1;
+  text-transform: none;
+  z-index: 20;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+  // keep it from clipping off the left edge on mobile
+  @include m.respond-to(sm) {
+    left: 0;
+    transform: none;
+  }
+
+  @include m.dark {
+    border-color: #3a3a3a;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  p {
+    margin: 0;
+    & + p { margin-top: 8px; }
+  }
+
+  strong {
+    font-weight: 600;
+  }
+}
