@@ -1,0 +1,231 @@
+@use '@/styles/mixins' as m;
+
+.checker {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+// ── Controls row ───────────────────────────────────────────
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+// ── Gen switcher ────────────────────────────────────────────
+
+.genSwitcher {
+  position: relative;
+  display: flex;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  padding: 3px;
+
+  @include m.dark {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.genSlider {
+  position: absolute;
+  top: 3px;
+  height: calc(100% - 6px);
+  width: calc((100% - 6px) / 3);
+  left: calc(3px + var(--index, 0) * (100% - 6px) / 3);
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: left 0.2s ease;
+  pointer-events: none;
+
+  @include m.dark {
+    background: #2a2a2a;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.genBtn {
+  position: relative;
+  z-index: 1;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 6px;
+  color: var(--foreground);
+  opacity: 0.4;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+
+  &.active {
+    opacity: 1;
+    font-weight: 600;
+  }
+}
+
+// ── Level input ─────────────────────────────────────────────
+
+.levelRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.levelLabel {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.levelInput {
+  width: 64px;
+  padding: 5px 8px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 14px;
+  background: transparent;
+  color: var(--foreground);
+  text-align: center;
+
+  &:focus { outline: none; border-color: #999; }
+
+  @include m.dark {
+    border-color: #3a3a3a;
+    &:focus { border-color: #666; }
+  }
+}
+
+// ── Stat rows ──────────────────────────────────────────────
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 130px 72px 80px 1fr;
+  align-items: center;
+  gap: 10px;
+
+  @include m.respond-to(sm) {
+    grid-template-columns: 100px 64px 70px 1fr;
+    gap: 6px;
+  }
+}
+
+.statName {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+}
+
+.statNameText {
+  text-transform: capitalize;
+  opacity: 0.7;
+}
+
+.range {
+  font-size: 12px;
+  opacity: 0.4;
+  font-variant-numeric: tabular-nums;
+}
+
+.statInput {
+  width: 100%;
+  padding: 5px 8px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 13px;
+  background: transparent;
+  color: var(--foreground);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+
+  &:focus { outline: none; border-color: #999; }
+
+  @include m.dark {
+    border-color: #3a3a3a;
+    &:focus { border-color: #666; }
+  }
+}
+
+// ── Result bar ─────────────────────────────────────────────
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.track {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #e0e0e0;
+  overflow: hidden;
+
+  @include m.dark { background: #333; }
+}
+
+.fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.25s ease;
+
+  &.perfect { background: #6890F0; }
+  &.great   { background: #78C850; }
+  &.good    { background: #FFD700; }
+  &.ok      { background: #FFAA5A; }
+  &.poor    { background: #FF7F7F; }
+}
+
+.ratingLabel {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 52px;
+  text-align: right;
+
+  &.perfect { color: #6890F0; }
+  &.great   { color: #78C850; }
+  &.good    { color: #c8a800; }
+  &.ok      { color: #c87830; }
+  &.poor    { color: #FF7F7F; }
+
+  @include m.dark {
+    &.good { color: #FFD700; }
+    &.ok   { color: #FFAA5A; }
+  }
+}
+
+// ── Footer notes ───────────────────────────────────────────
+
+.footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
+
+.footerItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.footerText {
+  opacity: 0.4;
+}
+
+.footerDot {
+  font-size: 11px;
+  opacity: 0.3;
+}
