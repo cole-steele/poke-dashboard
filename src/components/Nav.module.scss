@@ -1,0 +1,74 @@
+@use '@/styles/mixins' as m;
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 56px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: var(--background);
+
+  @include m.dark {
+    border-color: #222;
+  }
+
+  @include m.respond-to(sm) {
+    padding: 0 20px;
+  }
+}
+
+.logo {
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--foreground);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.email {
+  font-size: 13px;
+  opacity: 0.5;
+}
+
+.signOut {
+  font-size: 13px;
+  font-weight: 500;
+  background: none;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 5px 12px;
+  cursor: pointer;
+  color: var(--foreground);
+  transition: border-color 0.15s ease;
+
+  &:hover { border-color: #888; }
+
+  @include m.dark {
+    border-color: #333;
+    &:hover { border-color: #888; }
+  }
+}
+
+.signIn {
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--foreground);
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 5px 12px;
+  transition: border-color 0.15s ease;
+
+  &:hover { border-color: #888; }
+
+  @include m.dark {
+    border-color: #333;
+    &:hover { border-color: #888; }
+  }
+}
