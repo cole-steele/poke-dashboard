@@ -23,6 +23,50 @@
   }
 }
 
+.teamNameRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.teamNameLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.45;
+}
+
+.teamNameInput {
+  width: min(420px, 100%);
+  border: none;
+  border-bottom: 1px solid #d8d8d8;
+  border-radius: 0;
+  padding: 2px 0 7px;
+  background: transparent;
+  color: var(--foreground);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  outline: none;
+
+  &:focus {
+    border-color: var(--foreground);
+  }
+
+  @include m.dark {
+    border-color: #333;
+
+    &:focus {
+      border-color: var(--foreground);
+    }
+  }
+
+  @include m.respond-to(sm) {
+    font-size: 23px;
+  }
+}
+
 // ── Toolbar ────────────────────────────────────────────────
 
 .toolbar {
@@ -435,6 +479,7 @@
 }
 
 .pickerCard {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -465,6 +510,24 @@
   text-transform: capitalize;
   text-align: center;
   color: var(--foreground);
+}
+
+.savedMarker {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border-radius: 4px;
+  padding: 2px 4px;
+  background: rgba(245, 166, 35, 0.14);
+  color: #b97800;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+
+  @include m.dark {
+    color: #f5c16c;
+    background: rgba(245, 166, 35, 0.18);
+  }
 }
 
 // ── Type coverage ──────────────────────────────────────────

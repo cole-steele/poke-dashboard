@@ -20,6 +20,21 @@
   }
 }
 
+.backLink {
+  align-self: flex-start;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--foreground);
+  text-decoration: none;
+  opacity: 0.55;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  padding: 5px 10px;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 1; }
+}
+
 .heading {
   font-size: 40px;
   font-weight: 700;

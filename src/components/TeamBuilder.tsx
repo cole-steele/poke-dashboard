@@ -19,13 +19,16 @@ export default function TeamBuilder({
   pokemon,
   initialTeam,
   initialTemplates,
+  bookmarks,
 }: {
   pokemon: PokemonListItem[];
   initialTeam: (PokemonListItem | null)[];
   initialTemplates: TeamTemplate[];
+  bookmarks: string[];
 }) {
   const [slots, setSlots] = useState<(PokemonListItem | null)[]>(initialTeam);
   const [templates, setTemplates] = useState<TeamTemplate[]>(initialTemplates);
+  const [teamName, setTeamName] = useState("Untitled team");
   const [activeSlot, setActiveSlot] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
@@ -42,12 +45,17 @@ export default function TeamBuilder({
 
   const hasTeam = slots.some(Boolean);
   const teamActionPending = clearingTeam || pendingSlots.size > 0 || Boolean(loadingTemplateId);
+  const savedPokemon = useMemo(() => new Set(bookmarks), [bookmarks]);
 
   const filteredPokemon = useMemo(() => {
     const q = search.toLowerCase();
     const results = q ? pokemon.filter((p) => p.name.includes(q)) : pokemon;
+    results.sort((a, b) => {
+      const savedDelta = Number(savedPokemon.has(b.name)) - Number(savedPokemon.has(a.name));
+      return savedDelta || a.id - b.id;
+    });
     return results.slice(0, 40);
-  }, [pokemon, search]);
+  }, [pokemon, savedPokemon, search]);
 
   const coverage = useMemo(
     () => getTeamCoverage(slots.filter((s): s is PokemonListItem => s !== null)),
@@ -116,7 +124,9 @@ export default function TeamBuilder({
 
   function handleClearTeam() {
     const previous = slots;
+    const previousName = teamName;
     setSlots(Array(6).fill(null));
+    setTeamName("Untitled team");
     setActiveSlot(null);
     setActionError(null);
     setClearingTeam(true);
@@ -124,6 +134,7 @@ export default function TeamBuilder({
       const result = await clearTeam();
       if (!result.ok) {
         setSlots(previous);
+        setTeamName(previousName);
         setActionError(result.error ?? "Could not clear your team.");
       }
       setClearingTeam(false);
@@ -152,10 +163,12 @@ export default function TeamBuilder({
   function handleLoadTemplate(template: TeamTemplate) {
     if (loadingTemplateId) return;
     const previous = slots;
+    const previousName = teamName;
     const next = template.slots.map((name) =>
       name ? (pokemon.find((p) => p.name === name) ?? null) : null
     );
     setSlots(next);
+    setTeamName(template.name);
     setActiveSlot(null);
     setShowTemplates(false);
     setActionError(null);
@@ -164,6 +177,7 @@ export default function TeamBuilder({
       const result = await loadTemplate(template.slots);
       if (!result.ok) {
         setSlots(previous);
+        setTeamName(previousName);
         setActionError(result.error ?? "Could not load this team template.");
       }
       setLoadingTemplateId(null);
@@ -189,6 +203,21 @@ export default function TeamBuilder({
   return (
     <div className={styles.wrapper}>
       {actionError && <p className={styles.errorMessage}>{actionError}</p>}
+      <div className={styles.teamNameRow}>
+        <label className={styles.teamNameLabel} htmlFor="team-name">
+          Current team
+        </label>
+        <input
+          id="team-name"
+          className={styles.teamNameInput}
+          value={teamName}
+          onChange={(e) => setTeamName(e.target.value)}
+          onBlur={() => {
+            if (!teamName.trim()) setTeamName("Untitled team");
+          }}
+          maxLength={80}
+        />
+      </div>
       {/* Toolbar */}
       <div className={styles.toolbar}>
         <button
@@ -218,7 +247,14 @@ export default function TeamBuilder({
             </>
           ) : (
             <>
-              <button className={styles.saveBtn} onClick={() => setSaving(true)} disabled={!hasTeam || savingTemplate}>
+              <button
+                className={styles.saveBtn}
+                onClick={() => {
+                  setTemplateName(teamName.trim() || "Untitled team");
+                  setSaving(true);
+                }}
+                disabled={!hasTeam || savingTemplate}
+              >
                 {savingTemplate ? "Saving..." : "Save as template"}
               </button>
               <button className={styles.saveBtn} onClick={() => setShowTemplates(true)} disabled={Boolean(loadingTemplateId)}>
@@ -284,6 +320,9 @@ export default function TeamBuilder({
               >
                 <Image src={p.sprite} alt={p.name} width={52} height={52} />
                 <span className={styles.pickerName}>{p.name}</span>
+                {savedPokemon.has(p.name) && (
+                  <span className={styles.savedMarker}>Saved</span>
+                )}
               </button>
             ))}
           </div>
