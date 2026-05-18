@@ -17,15 +17,6 @@
   gap: 48px;
 }
 
-.back {
-  color: var(--foreground);
-  text-decoration: none;
-  font-size: 14px;
-  opacity: 0.6;
-  width: fit-content;
-  &:hover { opacity: 1; }
-}
-
 // ── Header ────────────────────────────────────────────────
 
 .header {
@@ -103,6 +94,9 @@
   font-weight: 600;
   text-transform: capitalize;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #fff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 
@@ -261,6 +255,12 @@
   margin: 0;
 }
 
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 // ── Pokédex entry ──────────────────────────────────────────
 
 .flavorText {
@@ -276,6 +276,7 @@
 .evoChain {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -291,6 +292,27 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.evoStep {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.evoArrowWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.evoTrigger {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: capitalize;
+  opacity: 0.45;
+  white-space: nowrap;
 }
 
 .evoStage {
@@ -330,7 +352,13 @@
 }
 
 .statName {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 13px;
+}
+
+.statLabel {
   text-transform: capitalize;
   opacity: 0.7;
 }
@@ -361,148 +389,3 @@
   transition: width 0.4s ease;
 }
 
-// ── Moves ──────────────────────────────────────────────────
-
-.moveList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.moveRow {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 12px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-
-  @include m.dark {
-    border-color: #2a2a2a;
-  }
-}
-
-.moveMeta {
-  display: grid;
-  grid-template-columns: 44px 1fr 80px 60px 44px;
-  align-items: center;
-  gap: 8px;
-
-  @include m.respond-to(sm) {
-    display: flex;
-    flex-wrap: wrap;
-  }
-}
-
-.moveLevel {
-  font-size: 11px;
-  font-weight: 600;
-  opacity: 0.4;
-}
-
-.moveNameGroup {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  overflow: hidden;
-}
-
-.moveName {
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: capitalize;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.moveClass {
-  flex-shrink: 0;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: capitalize;
-  padding: 1px 6px;
-  border-radius: 4px;
-}
-
-.moveClassPhysical {
-  background: rgba(239, 108, 0, 0.1);
-  color: #c8591a;
-  border: 1px solid rgba(239, 108, 0, 0.2);
-
-  @include m.dark {
-    background: rgba(239, 108, 0, 0.15);
-    color: #ffb74d;
-    border-color: rgba(239, 108, 0, 0.25);
-  }
-}
-
-.moveClassSpecial {
-  background: rgba(123, 31, 162, 0.1);
-  color: #7b1fa2;
-  border: 1px solid rgba(123, 31, 162, 0.2);
-
-  @include m.dark {
-    background: rgba(123, 31, 162, 0.15);
-    color: #ce93d8;
-    border-color: rgba(123, 31, 162, 0.25);
-  }
-}
-
-.moveClassStatus {
-  background: rgba(56, 142, 60, 0.1);
-  color: #388e3c;
-  border: 1px solid rgba(56, 142, 60, 0.2);
-
-  @include m.dark {
-    background: rgba(56, 142, 60, 0.15);
-    color: #81c784;
-    border-color: rgba(56, 142, 60, 0.25);
-  }
-}
-
-.movePow {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 4px;
-  text-align: center;
-  background: rgba(239, 108, 0, 0.1);
-  color: #c8591a;
-  border: 1px solid rgba(239, 108, 0, 0.2);
-
-  @include m.dark {
-    background: rgba(239, 108, 0, 0.15);
-    color: #ffb74d;
-    border-color: rgba(239, 108, 0, 0.25);
-  }
-}
-
-.movePP {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 4px;
-  text-align: center;
-  background: rgba(33, 150, 243, 0.1);
-  color: #1565c0;
-  border: 1px solid rgba(33, 150, 243, 0.2);
-
-  @include m.dark {
-    background: rgba(33, 150, 243, 0.15);
-    color: #64b5f6;
-    border-color: rgba(33, 150, 243, 0.25);
-  }
-}
-
-.moveFlavorText {
-  font-size: 13px;
-  opacity: 0.6;
-  margin: 0;
-  line-height: 1.5;
-  padding-left: 52px; // 44px level col + 8px gap
-
-  @include m.respond-to(sm) {
-    padding-left: 0;
-  }
-}

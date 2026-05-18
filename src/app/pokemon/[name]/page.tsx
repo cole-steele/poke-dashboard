@@ -8,10 +8,17 @@ import {
   type EvolutionNode,
 } from "@/lib/pokemon";
 import { getBookmarks } from "@/app/actions/bookmarks";
+import BackButton from "@/components/BackButton";
+import BackToTop from "@/components/BackToTop";
 import BookmarkButton from "@/components/BookmarkButton";
+import IVChecker from "@/components/IVChecker";
+import MoveList from "@/components/MoveList";
+import HelpTip from "@/components/HelpTip";
+import STAT_DESC from "@/lib/statDesc";
 import styles from "./page.module.scss";
 
 const STAT_MAX = 255;
+
 
 function statColor(value: number): string {
   if (value < 50)  return "#FF7F7F";
@@ -29,14 +36,17 @@ function EvolutionTree({ node }: { node: EvolutionNode }) {
         <span className={styles.evoName}>{node.name}</span>
       </Link>
       {node.evolvesTo.length > 0 && (
-        <>
-          <span className={styles.evoArrow}>→</span>
-          <div className={styles.evoBranches}>
-            {node.evolvesTo.map((next) => (
-              <EvolutionTree key={next.name} node={next} />
-            ))}
-          </div>
-        </>
+        <div className={styles.evoBranches}>
+          {node.evolvesTo.map((next) => (
+            <div key={next.name} className={styles.evoStep}>
+              <div className={styles.evoArrowWrap}>
+                {next.trigger && <span className={styles.evoTrigger}>{next.trigger}</span>}
+                <span className={styles.evoArrow}>→</span>
+              </div>
+              <EvolutionTree node={next} />
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
@@ -62,7 +72,7 @@ export default async function PokemonPage({
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <Link href="/" className={styles.back}>← Back</Link>
+        <BackButton />
 
         {/* Profile card */}
         <div className={styles.userBox}>
@@ -141,10 +151,19 @@ export default async function PokemonPage({
 
         {/* Base Stats */}
         <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Base Stats</h2>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Base Stats</h2>
+            <HelpTip>
+              <p><strong>Base stats</strong> are fixed numbers that define a species&apos; strengths. Every Charizard has the same base stats.</p>
+              <p>They don&apos;t change with level, but a higher base stat means that stat will always grow faster as your Pokémon levels up.</p>
+            </HelpTip>
+          </div>
           {pokemon.stats.map((stat) => (
             <div key={stat.name} className={styles.statRow}>
-              <span className={styles.statName}>{stat.name}</span>
+              <span className={styles.statName}>
+                <span className={styles.statLabel}>{stat.name}</span>
+                {STAT_DESC[stat.name] && <HelpTip><p>{STAT_DESC[stat.name]}</p></HelpTip>}
+              </span>
               <span className={styles.statValue}>{stat.value}</span>
               <div className={styles.barTrack}>
                 <div
@@ -159,36 +178,28 @@ export default async function PokemonPage({
           ))}
         </div>
 
+        {/* IV Checker */}
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>IV Checker</h2>
+            <HelpTip>
+              <p><strong>IVs (Individual Values)</strong> are hidden numbers from 0–31 assigned randomly when a Pokémon is caught or hatched. They never change.</p>
+              <p>They control how each stat is distributed as your Pokémon levels up. A higher IV means that stat grows a little more at every level. Two Charizards trained identically will still end up with different stats if their IVs differ, because one was distributing more points into that stat from the very start.</p>
+              <p>31 is perfect, 0 is the worst possible roll.</p>
+            </HelpTip>
+          </div>
+          <IVChecker stats={pokemon.stats.map((s) => ({ name: s.name, base: s.value }))} />
+        </div>
+
         {/* Moves */}
         {moves.length > 0 && (
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>Moves Learned by Level</h2>
-            <div className={styles.moveList}>
-              {moves.map((move) => (
-                <div key={move.name} className={styles.moveRow}>
-                  <div className={styles.moveMeta}>
-                    <span className={styles.moveLevel}>Lv.{move.level}</span>
-                    <div className={styles.moveNameGroup}>
-                      <span className={styles.moveName}>{move.name.replace(/-/g, " ")}</span>
-                      <span className={`${styles.moveClass} ${
-                        move.damageClass === "physical" ? styles.moveClassPhysical :
-                        move.damageClass === "special"  ? styles.moveClassSpecial :
-                                                          styles.moveClassStatus
-                      }`}>{move.damageClass}</span>
-                    </div>
-                    <span className={`${styles.badge} ${styles[move.type]}`}>{move.type}</span>
-                    <span className={styles.movePow}>{move.power ?? "—"} pow</span>
-                    <span className={styles.movePP}>{move.pp} PP</span>
-                  </div>
-                  {move.flavorText && (
-                    <p className={styles.moveFlavorText}>{move.flavorText}</p>
-                  )}
-                </div>
-              ))}
-            </div>
+            <MoveList moves={moves} />
           </div>
         )}
       </div>
+      <BackToTop />
     </div>
   );
 }
