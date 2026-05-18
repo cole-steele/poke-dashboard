@@ -7,6 +7,7 @@ import styles from "./page.module.scss";
 export default function LoginPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [confirmError, setConfirmError] = useState<string | null>(null);
+  // clear client-side errors when switching tabs
   const [signInState, signInAction, signingIn] = useActionState(signIn, null);
   const [signUpState, signUpAction, signingUp] = useActionState(signUp, null);
 
@@ -36,13 +37,13 @@ export default function LoginPage() {
         <div className={styles.tabs}>
           <button
             className={`${styles.tab} ${isSignIn ? styles.active : ""}`}
-            onClick={() => setMode("signin")}
+            onClick={() => { setMode("signin"); setConfirmError(null); }}
           >
             Sign in
           </button>
           <button
             className={`${styles.tab} ${!isSignIn ? styles.active : ""}`}
-            onClick={() => setMode("signup")}
+            onClick={() => { setMode("signup"); setConfirmError(null); }}
           >
             Sign up
           </button>
