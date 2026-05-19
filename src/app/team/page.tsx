@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPokemonList } from "@/lib/pokemon";
 import { getTeam, getTemplates } from "@/app/actions/team";
@@ -10,16 +10,7 @@ export default async function TeamPage() {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.main}>
-          <h1 className={styles.heading}>Team Builder</h1>
-          <p className={styles.gateMessage}>
-            <Link href="/login" className={styles.gateLink}>Sign in</Link> to build and save your team.
-          </p>
-        </div>
-      </div>
-    );
+    redirect("/login?next=/team");
   }
 
   const [pokemon, teamNames, templates] = await Promise.all([

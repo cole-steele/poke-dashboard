@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/actions/auth";
+import MobileNav from "./MobileNav";
 import PokeballIcon from "./PokeballIcon";
 import styles from "./Nav.module.scss";
 
@@ -31,6 +32,7 @@ export default async function Nav() {
           </Link>
         )}
       </div>
+      <MobileNav email={user?.email ?? null} />
     </nav>
   );
 }

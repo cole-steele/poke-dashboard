@@ -33,6 +33,10 @@
   display: flex;
   align-items: center;
   gap: 16px;
+
+  @include m.respond-to(sm) {
+    display: none;
+  }
 }
 
 .email {
@@ -86,4 +90,143 @@
     border-color: #333;
     &:hover { border-color: #888; }
   }
+}
+
+.mobileNav {
+  display: none;
+
+  @include m.respond-to(sm) {
+    display: block;
+  }
+}
+
+.menuButton {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+
+  span {
+    display: block;
+    width: 16px;
+    height: 2px;
+    margin: 0 auto;
+    border-radius: 999px;
+    background: var(--foreground);
+  }
+
+  @include m.dark {
+    border-color: #333;
+  }
+}
+
+.mobileLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+.mobileOverlay {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+}
+
+.mobilePanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(280px, calc(100vw - 40px));
+  height: 100%;
+  padding: 18px;
+  border-left: 1px solid #e0e0e0;
+  background: var(--background);
+  box-shadow: -12px 0 30px rgba(0, 0, 0, 0.12);
+
+  @include m.dark {
+    border-color: #222;
+  }
+}
+
+.mobilePanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.mobileTitle {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+
+  @include m.dark {
+    border-color: #333;
+  }
+}
+
+.mobileLink,
+.mobileActionLink,
+.mobileAction {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+
+  @include m.dark {
+    border-color: #333;
+  }
+}
+
+.accountBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 2px 0;
+}
+
+.accountLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.accountEmail {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  opacity: 0.75;
 }
