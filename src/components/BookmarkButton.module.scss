@@ -1,0 +1,34 @@
+@use '@/styles/mixins' as m;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #e0e0e0;
+  background: none;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  width: fit-content;
+
+  &:hover { border-color: #888; }
+
+  &:disabled { opacity: 0.5; cursor: default; }
+
+  &.saved {
+    border-color: #f5a623;
+    color: #f5a623;
+
+    &:hover { border-color: #d4891a; }
+  }
+
+  @include m.dark {
+    border-color: #333;
+    &:hover { border-color: #888; }
+    &.saved { border-color: #f5a623; }
+  }
+}

@@ -11,6 +11,7 @@ export interface PokemonDetail {
   id: number;
   name: string;
   sprite: string;
+  shinySprite: string;
   officialArt: string;
   types: string[];
   stats: { name: string; value: number }[];
@@ -61,6 +62,7 @@ interface PokeAPIDetailResponse {
   abilities: { ability: { name: string }; is_hidden: boolean }[];
   sprites: {
     front_default: string;
+    front_shiny: string;
     other: { "official-artwork": { front_default: string } };
   };
   moves: {
@@ -169,6 +171,7 @@ export async function getPokemonDetail(name: string): Promise<PokemonDetail> {
     id: d.id,
     name: d.name,
     sprite: d.sprites.front_default,
+    shinySprite: d.sprites.front_shiny,
     officialArt: d.sprites.other["official-artwork"].front_default,
     types: d.types.map((t) => t.type.name),
     stats: d.stats.map((s) => ({ name: s.stat.name, value: s.base_stat })),

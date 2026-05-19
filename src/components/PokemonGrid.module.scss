@@ -76,18 +76,45 @@
   opacity: 0.7;
 }
 
-// ── Type filter row ────────────────────────────────────────
+// ── Filter row: active tags box + type grid ────────────────
 
-.typeBar {
+.filterRow {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 16px;
+
+  @include m.respond-to(md) {
+    flex-direction: column;
+  }
 }
 
-.clearBtn {
+.selectedBox {
   flex-shrink: 0;
-  width: 90px;
-  padding: 5px 10px;
+  width: 240px;
+  min-height: 88px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 8px 32px;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 6px;
+
+  @include m.dark {
+    border-color: #2a2a2a;
+  }
+
+  @include m.respond-to(md) {
+    width: 100%;
+  }
+}
+
+.activeTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
   border-radius: 4px;
   font-size: 12px;
   font-weight: 600;
@@ -96,28 +123,65 @@
   background: none;
   color: var(--foreground);
   cursor: pointer;
-  opacity: 0.7;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   transition: opacity 0.15s ease;
+  white-space: nowrap;
+
+  &:hover { opacity: 0.7; }
+
+  @include m.dark { border-color: #444; }
+}
+
+.typeTag {
+  color: #fff;
+  border: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+  @each $type, $color in v.$type-colors {
+    &.#{$type} { background-color: $color; }
+  }
+}
+
+.tagX {
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.clearAll {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 3px 8px;
+  cursor: pointer;
+  color: var(--foreground);
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
 
   &:hover { opacity: 1; }
 
   @include m.dark { border-color: #444; }
 }
 
+// ── Type grid ──────────────────────────────────────────────
+
 .typeGrid {
   display: grid;
   grid-template-rows: repeat(3, auto);
   grid-auto-flow: column;
   gap: 6px;
-}
 
-.typeX {
-  margin-left: 4px;
-  font-size: 11px;
-  opacity: 0.8;
+  @include m.respond-to(md) {
+    grid-template-rows: unset;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    width: 100%;
+  }
 }
 
 .typeBtn {
@@ -165,15 +229,9 @@
 }
 
 .card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 12px 8px;
+  position: relative;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  text-decoration: none;
-  color: inherit;
 
   @include m.dark { border-color: #333; }
 
@@ -183,6 +241,37 @@
       background-color: rgba(0, 0, 0, 0.03);
     }
   }
+}
+
+.cardInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+}
+
+.saveBtn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #ccc;
+  padding: 2px 4px;
+  line-height: 1;
+  transition: color 0.15s ease;
+
+  &:hover { color: #f5a623; }
+
+  &.saveBtnSaved { color: #f5a623; }
+
+  @include m.dark { color: #555; }
 }
 
 .id {

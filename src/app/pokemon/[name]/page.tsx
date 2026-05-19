@@ -7,6 +7,8 @@ import {
   getPokemonLevelUpMoves,
   type EvolutionNode,
 } from "@/lib/pokemon";
+import { getBookmarks } from "@/app/actions/bookmarks";
+import BookmarkButton from "@/components/BookmarkButton";
 import styles from "./page.module.scss";
 
 const STAT_MAX = 255;
@@ -47,77 +49,93 @@ export default async function PokemonPage({
 }) {
   const { name } = await params;
 
-  const [pokemon, species, moves] = await Promise.all([
+  const [pokemon, species, moves, bookmarks] = await Promise.all([
     getPokemonDetail(name),
     getPokemonSpecies(name),
     getPokemonLevelUpMoves(name),
+    getBookmarks(),
   ]);
 
   const evolutionChain = await getEvolutionChain(species.evolutionChainUrl);
+  const isBookmarked = bookmarks.includes(name);
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
         <Link href="/" className={styles.back}>← Back</Link>
 
-        {/* Header */}
-        <div className={styles.header}>
-          <Image
-            src={pokemon.officialArt}
-            alt={pokemon.name}
-            width={240}
-            height={240}
-            priority
-          />
-          <div className={styles.meta}>
-            <span className={styles.id}>#{String(pokemon.id).padStart(3, "0")}</span>
-            <h1 className={styles.name}>{pokemon.name}</h1>
-            <p className={styles.genus}>{species.genus}</p>
-            <div className={styles.types}>
-              {pokemon.types.map((type) => (
-                <span key={type} className={`${styles.badge} ${styles[type]}`}>
-                  {type}
-                </span>
-              ))}
+        {/* Profile card */}
+        <div className={styles.userBox}>
+          <div className={styles.userBoxSave}>
+            <BookmarkButton pokemonName={name} initialBookmarked={isBookmarked} />
+          </div>
+          <div className={styles.header}>
+            <div className={styles.imageCol}>
+              <Image
+                src={pokemon.officialArt}
+                alt={pokemon.name}
+                width={240}
+                height={240}
+                priority
+              />
+              <div className={styles.sprites}>
+                <div className={styles.spriteItem}>
+                  <Image src={pokemon.sprite} alt={`${pokemon.name} sprite`} width={64} height={64} />
+                  <span className={styles.spriteLabel}>Default</span>
+                </div>
+                {pokemon.id <= 151 && (
+                  <div className={styles.spriteItem}>
+                    <Image src={pokemon.shinySprite} alt={`${pokemon.name} shiny sprite`} width={64} height={64} />
+                    <span className={styles.spriteLabel}>Shiny</span>
+                  </div>
+                )}
+              </div>
             </div>
-            <div className={styles.physicals}>
-              <span>Height: {(pokemon.height / 10).toFixed(1)}m</span>
-              <span>Weight: {(pokemon.weight / 10).toFixed(1)}kg</span>
-              <span>{species.generation}</span>
-              {species.habitat && <span>Habitat: {species.habitat}</span>}
-              {species.isLegendary && <span className={styles.legendary}>Legendary</span>}
-              {species.isMythical && <span className={styles.legendary}>Mythical</span>}
-            </div>
-            <div className={styles.abilities}>
-              <h2>Abilities</h2>
-              <ul>
-                {pokemon.abilities.map((a) => (
-                  <li key={a.name} className={styles.abilityItem}>
-                    <span className={styles.abilityName}>
-                      {a.name}
-                      {a.hidden && <span className={styles.hidden}>hidden</span>}
-                    </span>
-                    {a.description && (
-                      <span className={styles.tooltip}>{a.description}</span>
-                    )}
-                  </li>
+            <div className={styles.meta}>
+              <span className={styles.id}>#{String(pokemon.id).padStart(3, "0")}</span>
+              <h1 className={styles.name}>{pokemon.name}</h1>
+              <p className={styles.genus}>{species.genus}</p>
+              <div className={styles.types}>
+                {pokemon.types.map((type) => (
+                  <span key={type} className={`${styles.badge} ${styles[type]}`}>
+                    {type}
+                  </span>
                 ))}
-              </ul>
+              </div>
+              <div className={styles.physicals}>
+                <span>Height: {(pokemon.height / 10).toFixed(1)}m</span>
+                <span>Weight: {(pokemon.weight / 10).toFixed(1)}kg</span>
+                <span>{species.generation}</span>
+                {species.habitat && <span>Habitat: {species.habitat}</span>}
+                {species.isLegendary && <span className={styles.legendary}>Legendary</span>}
+                {species.isMythical && <span className={styles.legendary}>Mythical</span>}
+              </div>
+              <div className={styles.abilities}>
+                <h2>Abilities</h2>
+                <ul>
+                  {pokemon.abilities.map((a) => (
+                    <li key={a.name} className={styles.abilityItem}>
+                      <span className={styles.abilityName}>
+                        {a.name}
+                        {a.hidden && <span className={styles.hidden}>hidden</span>}
+                      </span>
+                      {a.description && (
+                        <span className={styles.tooltip}>{a.description}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Pokédex Entry */}
-        <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Pokédex Entry</h2>
-          <p className={styles.flavorText}>{species.flavorText}</p>
-        </div>
-
-        {/* Evolution Chain */}
-        <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Evolution Chain</h2>
-          <div className={styles.evoChain}>
-            <EvolutionTree node={evolutionChain} />
+          {species.flavorText && (
+            <p className={styles.cardFlavorText}>{species.flavorText}</p>
+          )}
+          <div className={styles.cardSection}>
+            <h2 className={styles.sectionTitle}>Evolution Chain</h2>
+            <div className={styles.evoChain}>
+              <EvolutionTree node={evolutionChain} />
+            </div>
           </div>
         </div>
 
@@ -150,11 +168,17 @@ export default async function PokemonPage({
                 <div key={move.name} className={styles.moveRow}>
                   <div className={styles.moveMeta}>
                     <span className={styles.moveLevel}>Lv.{move.level}</span>
-                    <span className={styles.moveName}>{move.name.replace(/-/g, " ")}</span>
+                    <div className={styles.moveNameGroup}>
+                      <span className={styles.moveName}>{move.name.replace(/-/g, " ")}</span>
+                      <span className={`${styles.moveClass} ${
+                        move.damageClass === "physical" ? styles.moveClassPhysical :
+                        move.damageClass === "special"  ? styles.moveClassSpecial :
+                                                          styles.moveClassStatus
+                      }`}>{move.damageClass}</span>
+                    </div>
                     <span className={`${styles.badge} ${styles[move.type]}`}>{move.type}</span>
-                    <span className={styles.moveClass}>{move.damageClass}</span>
-                    <span className={styles.moveStat}>{move.power ?? "—"} pow</span>
-                    <span className={styles.moveStat}>{move.pp} PP</span>
+                    <span className={styles.movePow}>{move.power ?? "—"} pow</span>
+                    <span className={styles.movePP}>{move.pp} PP</span>
                   </div>
                   {move.flavorText && (
                     <p className={styles.moveFlavorText}>{move.flavorText}</p>

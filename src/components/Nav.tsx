@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/actions/auth";
+import PokeballIcon from "./PokeballIcon";
 import styles from "./Nav.module.scss";
 
 export default async function Nav() {
@@ -12,9 +13,11 @@ export default async function Nav() {
   return (
     <nav className={styles.nav}>
       <Link href="/" className={styles.logo}>
+        <PokeballIcon size={18} />
         Poke Dashboard
       </Link>
       <div className={styles.right}>
+        <Link href="/team" className={styles.navLink}>Team</Link>
         {user ? (
           <>
             <span className={styles.email}>{user.email}</span>

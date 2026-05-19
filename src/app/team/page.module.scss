@@ -12,8 +12,7 @@
   @include m.flex-col;
   width: 100%;
   max-width: 1200px;
-  align-items: flex-start;
-  gap: 40px;
+  gap: 32px;
   padding: 48px 60px;
 
   @include m.respond-to(sm) {
@@ -22,9 +21,6 @@
 }
 
 .heading {
-  display: flex;
-  align-items: center;
-  gap: 12px;
   font-size: 40px;
   font-weight: 700;
   letter-spacing: -1px;
@@ -34,3 +30,12 @@
   }
 }
 
+.gateMessage {
+  font-size: 15px;
+  opacity: 0.6;
+}
+
+.gateLink {
+  color: var(--foreground);
+  font-weight: 600;
+}
