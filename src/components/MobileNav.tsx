@@ -47,6 +47,9 @@ export default function MobileNav({ email }: { email: string | null }) {
               </button>
             </div>
 
+            <Link href="/" className={styles.mobileLink} onClick={closeMenu}>
+              Pokédex
+            </Link>
             <Link href="/team" className={styles.mobileLink} onClick={closeMenu}>
               Team Builder
             </Link>
