@@ -213,7 +213,7 @@ export default function PokemonGrid({
             </button>
           ))}
           <button
-            className={styles.clearAll}
+            className={`${styles.clearAll} ${hasActiveFilters ? styles.clearAllActive : ""}`}
             onClick={clearAll}
             style={{ visibility: hasActiveFilters ? "visible" : "hidden" }}
           >
