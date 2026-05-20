@@ -43,12 +43,6 @@
   z-index: 20;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 
-  // keep it from clipping off the left edge on mobile
-  @include m.respond-to(sm) {
-    left: 0;
-    transform: none;
-  }
-
   @include m.dark {
     border-color: #3a3a3a;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
