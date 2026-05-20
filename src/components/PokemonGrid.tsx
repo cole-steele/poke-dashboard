@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { PokemonListItem } from "@/lib/pokemon";
@@ -34,6 +34,9 @@ export default function PokemonGrid({
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [savedOnly, setSavedOnly] = useState(false);
   const [localBookmarks, setLocalBookmarks] = useState<Set<string>>(() => new Set(bookmarks));
+  const [pendingBookmarks, setPendingBookmarks] = useState<Set<string>>(new Set());
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [, startBookmarkTransition] = useTransition();
 
   const sortIsDefault = sortKey === "id" && sortDir === "asc";
   const hasActiveFilters = selectedTypes.size > 0 || !sortIsDefault || savedOnly;
@@ -107,6 +110,10 @@ export default function PokemonGrid({
   function handleGridBookmark(e: React.MouseEvent, name: string) {
     e.preventDefault();
     e.stopPropagation();
+    if (pendingBookmarks.has(name)) return;
+
+    const wasBookmarked = localBookmarks.has(name);
+    setActionError(null);
     setLocalBookmarks((prev) => {
       const next = new Set(prev);
       if (next.has(name)) {
@@ -116,7 +123,42 @@ export default function PokemonGrid({
       }
       return next;
     });
-    toggleBookmark(name);
+    setPendingBookmarks((prev) => new Set(prev).add(name));
+    startBookmarkTransition(async () => {
+      const result = await toggleBookmark(name);
+      if (result.error) {
+        setLocalBookmarks((prev) => {
+          const next = new Set(prev);
+          if (wasBookmarked) {
+            next.add(name);
+          } else {
+            next.delete(name);
+          }
+          return next;
+        });
+        setActionError(result.error);
+        setPendingBookmarks((prev) => {
+          const next = new Set(prev);
+          next.delete(name);
+          return next;
+        });
+        return;
+      }
+      setLocalBookmarks((prev) => {
+        const next = new Set(prev);
+        if (result.bookmarked) {
+          next.add(name);
+        } else {
+          next.delete(name);
+        }
+        return next;
+      });
+      setPendingBookmarks((prev) => {
+        const next = new Set(prev);
+        next.delete(name);
+        return next;
+      });
+    });
   }
 
   function clearAll() {
@@ -128,6 +170,7 @@ export default function PokemonGrid({
 
   return (
     <div className={styles.wrapper}>
+      {actionError && <p className={styles.errorMessage}>{actionError}</p>}
       {/* Search + sort */}
       <div className={styles.controlBar}>
         <input
@@ -226,18 +269,29 @@ export default function PokemonGrid({
                   </div>
                 </Link>
                 <button
-                  className={`${styles.saveBtn} ${localBookmarks.has(p.name) ? styles.saveBtnSaved : ""}`}
+                  className={`${styles.saveBtn} ${localBookmarks.has(p.name) ? styles.saveBtnSaved : ""} ${pendingBookmarks.has(p.name) ? styles.saveBtnPending : ""}`}
                   onClick={(e) => handleGridBookmark(e, p.name)}
+                  disabled={pendingBookmarks.has(p.name)}
                   aria-label={localBookmarks.has(p.name) ? "Remove bookmark" : "Save"}
+                  aria-busy={pendingBookmarks.has(p.name)}
                 >
-                  {localBookmarks.has(p.name) ? "★" : "☆"}
+                  {pendingBookmarks.has(p.name) ? "..." : localBookmarks.has(p.name) ? "★" : "☆"}
                 </button>
               </div>
             </li>
           ))}
         </ul>
       ) : (
-        <p className={styles.empty}>No Pokémon found.</p>
+        <div className={styles.emptyState}>
+          <p className={styles.emptyTitle}>
+            {savedOnly ? "No saved Pokemon yet." : "No Pokemon found."}
+          </p>
+          <p className={styles.emptyText}>
+            {savedOnly
+              ? "Save Pokemon with the star button, then use this filter to review them."
+              : "Try a different search, type filter, or sort option."}
+          </p>
+        </div>
       )}
     </div>
   );

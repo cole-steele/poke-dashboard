@@ -8,6 +8,21 @@
   width: 100%;
 }
 
+.errorMessage {
+  margin: 0;
+  border: 1px solid rgba(192, 57, 43, 0.25);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: #c0392b;
+  background: rgba(192, 57, 43, 0.06);
+  font-size: 13px;
+
+  @include m.dark {
+    color: #ef9a9a;
+    background: rgba(192, 57, 43, 0.14);
+  }
+}
+
 // ── Search + sort row ──────────────────────────────────────
 
 .controlBar {
@@ -270,6 +285,8 @@
   &:hover { color: #f5a623; }
 
   &.saveBtnSaved { color: #f5a623; }
+  &.saveBtnPending { opacity: 0.55; cursor: default; }
+  &:disabled { pointer-events: none; }
 
   @include m.dark { color: #555; }
 }
@@ -307,9 +324,25 @@
   }
 }
 
-.empty {
-  font-size: 14px;
-  opacity: 0.5;
+.emptyState {
+  border: 1px dashed #d8d8d8;
+  border-radius: 8px;
+  padding: 24px;
+
+  @include m.dark {
+    border-color: #333;
+  }
+}
+
+.emptyTitle {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.emptyText {
   margin: 0;
-  padding: 24px 0;
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0.55;
 }

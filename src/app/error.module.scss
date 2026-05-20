@@ -1,0 +1,48 @@
+.page {
+  display: flex;
+  justify-content: center;
+  padding: 64px 24px;
+  color: var(--foreground);
+}
+
+.panel {
+  width: min(520px, 100%);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 24px;
+  background: var(--background);
+  text-align: center;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.message {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.65;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.button,
+.link {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
