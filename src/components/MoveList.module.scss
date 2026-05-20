@@ -258,21 +258,38 @@
 }
 
 .moveMeta {
-  display: grid;
-  grid-template-columns: 44px 1fr 70px 76px 64px 44px;
+  display: flex;
   align-items: center;
   gap: 8px;
 
   @include m.respond-to(sm) {
-    display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
   }
+}
+
+.moveNameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.moveBadges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .moveLevel {
   font-size: 11px;
   font-weight: 600;
   opacity: 0.4;
+  flex-shrink: 0;
 }
 
 .moveName {
@@ -314,9 +331,6 @@
   justify-content: center;
 }
 
-.moveClassSpan {
-  grid-column: span 2;
-}
 
 .moveClassPhysical {
   background: rgba(239, 108, 0, 0.1);

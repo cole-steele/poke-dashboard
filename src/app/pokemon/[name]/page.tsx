@@ -10,6 +10,7 @@ import {
 } from "@/lib/pokemon";
 import { getBookmarks } from "@/app/actions/bookmarks";
 import BackButton from "@/components/BackButton";
+import ScrollTop from "@/components/ScrollTop";
 import BackToTop from "@/components/BackToTop";
 import BookmarkButton from "@/components/BookmarkButton";
 import IVChecker from "@/components/IVChecker";
@@ -90,6 +91,7 @@ export default async function PokemonPage({
 
   return (
     <div className={styles.page}>
+      <ScrollTop />
       <div className={styles.container}>
         <BackButton />
 

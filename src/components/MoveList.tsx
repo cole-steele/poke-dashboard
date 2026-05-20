@@ -145,28 +145,28 @@ export default function MoveList({ moves }: { moves: MoveDetail[] }) {
           filtered.map((move) => (
             <div key={move.name} className={styles.moveRow}>
               <div className={styles.moveMeta}>
-                <span className={styles.moveLevel}>Lv.{move.level}</span>
-                <span className={styles.moveName}>{move.name.replace(/-/g, " ")}</span>
-                <span className={`${styles.badge} ${styles[move.type]}`}>{move.type}</span>
-                <span
-                  className={`${styles.moveClass} ${
+                <div className={styles.moveNameRow}>
+                  <span className={styles.moveLevel}>Lv.{move.level}</span>
+                  <span className={styles.moveName}>{move.name.replace(/-/g, " ")}</span>
+                </div>
+                <div className={styles.moveBadges}>
+                  <span className={`${styles.badge} ${styles[move.type]}`}>{move.type}</span>
+                  <span className={`${styles.moveClass} ${
                     move.damageClass === "physical" ? styles.moveClassPhysical :
                     move.damageClass === "special"  ? styles.moveClassSpecial :
                                                       styles.moveClassStatus
-                  } ${move.damageClass === "status" ? styles.moveClassSpan : ""}`}
-                >
-                  {move.damageClass}
-                </span>
-                {move.damageClass !== "status" && (
-                  <span
-                    className={`${styles.movePow} ${
-                      move.damageClass === "physical" ? styles.moveClassPhysical : styles.moveClassSpecial
-                    }`}
-                  >
-                    {move.power ?? "—"} pow
+                  }`}>
+                    {move.damageClass}
                   </span>
-                )}
-                <span className={styles.movePP}>{move.pp} PP</span>
+                  {move.damageClass !== "status" && (
+                    <span className={`${styles.movePow} ${
+                      move.damageClass === "physical" ? styles.moveClassPhysical : styles.moveClassSpecial
+                    }`}>
+                      {move.power ?? "—"} pow
+                    </span>
+                  )}
+                  <span className={styles.movePP}>{move.pp} PP</span>
+                </div>
               </div>
               {move.flavorText && (
                 <p className={styles.moveFlavorText}>{move.flavorText}</p>
