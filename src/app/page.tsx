@@ -23,6 +23,15 @@ export default async function Home() {
 
   return (
     <div className={styles.page}>
+      <div className={styles.bgBall} aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18.5" stroke="currentColor" strokeWidth="1" />
+          <path d="M1.5 20a18.5 18.5 0 0 1 37 0H1.5Z" fill="currentColor" />
+          <rect x="1.5" y="18.75" width="37" height="2.5" fill="currentColor" />
+          <circle cx="20" cy="20" r="6" stroke="currentColor" strokeWidth="1.5" />
+          <circle cx="20" cy="20" r="2.5" fill="currentColor" />
+        </svg>
+      </div>
       <main className={styles.main} id="top">
         <div className={styles.header}>
           <div>

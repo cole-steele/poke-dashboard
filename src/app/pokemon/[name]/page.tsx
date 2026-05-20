@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -16,6 +17,24 @@ import MoveList from "@/components/MoveList";
 import HelpTip from "@/components/HelpTip";
 import STAT_DESC from "@/lib/statDesc";
 import styles from "./page.module.scss";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ name: string }>;
+}): Promise<Metadata> {
+  const { name } = await params;
+  const [pokemon, species] = await Promise.all([
+    getPokemonDetail(name),
+    getPokemonSpecies(name),
+  ]);
+  const types = pokemon.types.join(", ");
+  const title = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+  return {
+    title,
+    description: `${title} (#${String(pokemon.id).padStart(3, "0")}) — ${types} type. ${species.genus}. Base stats, evolution chain, IV checker, and level-up moves.`,
+  };
+}
 
 const STAT_MAX = 255;
 

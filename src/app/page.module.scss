@@ -6,10 +6,14 @@
   align-items: center;
   background-color: var(--background);
   color: var(--foreground);
+  position: relative;
+  overflow: hidden;
 }
 
 .main {
   @include m.flex-col;
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 1200px;
   align-items: flex-start;
@@ -18,6 +22,32 @@
 
   @include m.respond-to(sm) {
     padding: 32px 24px;
+  }
+}
+
+.bgBall {
+  position: absolute;
+  z-index: 0;
+  top: -180px;
+  right: -180px;
+  width: 700px;
+  height: 700px;
+  opacity: 0.055;
+  transform: rotate(22deg);
+  pointer-events: none;
+  color: var(--foreground);
+  flex-shrink: 0;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  @include m.respond-to(sm) {
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    right: -120px;
   }
 }
 
