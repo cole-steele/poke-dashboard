@@ -321,9 +321,8 @@
   gap: 2px;
 
   @include m.respond-to(sm) {
-    flex-direction: row;
-    align-items: center;
-    gap: 6px;
+    position: relative;
+    gap: 0;
   }
 }
 
@@ -333,6 +332,13 @@
   text-transform: capitalize;
   opacity: 0.45;
   white-space: nowrap;
+
+  @include m.respond-to(sm) {
+    position: absolute;
+    left: calc(100% + 6px);
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 .evoStage {

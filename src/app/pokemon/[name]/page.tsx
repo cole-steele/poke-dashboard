@@ -60,8 +60,8 @@ function EvolutionTree({ node }: { node: EvolutionNode }) {
           {node.evolvesTo.map((next) => (
             <div key={next.name} className={styles.evoStep}>
               <div className={styles.evoArrowWrap}>
-                {next.trigger && <span className={styles.evoTrigger}>{next.trigger}</span>}
                 <span className={styles.evoArrow}>→</span>
+                {next.trigger && <span className={styles.evoTrigger}>{next.trigger}</span>}
               </div>
               <EvolutionTree node={next} />
             </div>
