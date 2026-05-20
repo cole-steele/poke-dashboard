@@ -93,8 +93,13 @@ export default function IVChecker({ stats }: Props) {
           const { min, max } = getRange(base, level, isHP, gen);
           const raw = values[name];
           const actual = raw !== undefined && raw !== "" ? Number(raw) : null;
-          const rating = actual !== null ? rate(actual, min, max) : null;
-          const pct = actual !== null ? Math.max(0, Math.min(1, (actual - min) / (max - min))) : null;
+          const isInvalid = actual !== null && (actual < 0 || !Number.isInteger(actual) || actual < min);
+          const rating = actual !== null
+            ? (isInvalid ? { label: "Impossible", key: "invalid" } : rate(actual, min, max))
+            : null;
+          const pct = actual !== null && !isInvalid
+            ? Math.max(0, Math.min(1, (actual - min) / (max - min)))
+            : null;
           const desc = STAT_DESC[name];
 
           return (
@@ -107,9 +112,11 @@ export default function IVChecker({ stats }: Props) {
               <input
                 type="number"
                 placeholder="—"
+                min={0}
+                step={1}
                 value={raw ?? ""}
                 onChange={(e) => setValues((v) => ({ ...v, [name]: e.target.value }))}
-                className={styles.statInput}
+                className={`${styles.statInput} ${isInvalid ? styles.statInputInvalid : ""}`}
               />
               <div className={styles.result}>
                 <div className={styles.track}>

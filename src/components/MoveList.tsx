@@ -59,6 +59,13 @@ export default function MoveList({ moves }: { moves: MoveDetail[] }) {
     if (sortField === field) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     else { setSortField(field); setSortDir("asc"); }
   }
+  function clearAll() {
+    setSearch("");
+    setTypeFilters(new Set());
+    setClassFilters(new Set());
+    setSortField("level");
+    setSortDir("asc");
+  }
 
   const isFiltered = !!(search || typeFilters.size > 0 || classFilters.size > 0);
 
@@ -71,6 +78,7 @@ export default function MoveList({ moves }: { moves: MoveDetail[] }) {
             type="text"
             placeholder="Search moves…"
             value={search}
+            maxLength={50}
             onChange={(e) => setSearch(e.target.value)}
           />
           {search && (
@@ -122,9 +130,12 @@ export default function MoveList({ moves }: { moves: MoveDetail[] }) {
       </div>
 
       {isFiltered && (
-        <p className={styles.resultCount}>
-          {filtered.length} {filtered.length === 1 ? "move" : "moves"}
-        </p>
+        <div className={styles.filterStatus}>
+          <p className={styles.resultCount}>
+            {filtered.length} {filtered.length === 1 ? "move" : "moves"}
+          </p>
+          <button className={styles.clearAll} onClick={clearAll}>Clear all</button>
+        </div>
       )}
 
       <div className={styles.moveList}>
