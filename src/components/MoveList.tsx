@@ -68,49 +68,31 @@ export default function MoveList({ moves }: { moves: MoveDetail[] }) {
   }
 
   const isFiltered = !!(search || typeFilters.size > 0 || classFilters.size > 0);
+  const activeTags = [
+    ...[...typeFilters].map((t) => ({ key: t, label: t, kind: "type" as const })),
+    ...[...classFilters].map((c) => ({ key: c, label: c, kind: "class" as const })),
+  ];
 
   return (
     <div className={styles.root}>
       <div className={styles.controls}>
-        <div className={styles.searchWrap}>
-          <input
-            className={styles.search}
-            type="text"
-            placeholder="Search moves…"
-            value={search}
-            maxLength={50}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          {search && (
-            <button className={styles.clearBtn} onClick={() => setSearch("")} aria-label="Clear search">
-              ×
-            </button>
-          )}
-        </div>
 
-        <div className={styles.pillGroup}>
-          {allTypes.map((t) => (
-            <button
-              key={t}
-              className={`${styles.typePill} ${styles[t]} ${typeFilters.has(t) ? styles.active : ""}`}
-              onClick={() => toggleType(t)}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-
-        <div className={styles.bottomRow}>
-          <div className={styles.pillGroup}>
-            {(["physical", "special", "status"] as const).map((c) => (
-              <button
-                key={c}
-                className={`${styles.classPill} ${styles[`class${c[0].toUpperCase()}${c.slice(1)}`]} ${classFilters.has(c) ? styles.active : ""}`}
-                onClick={() => toggleClass(c)}
-              >
-                {c}
+        {/* Search + sort inline */}
+        <div className={styles.topRow}>
+          <div className={styles.searchWrap}>
+            <input
+              className={styles.search}
+              type="text"
+              placeholder="Search moves…"
+              value={search}
+              maxLength={50}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <button className={styles.clearBtn} onClick={() => setSearch("")} aria-label="Clear search">
+                ×
               </button>
-            ))}
+            )}
           </div>
           <div className={styles.sortGroup}>
             {(["level", "name", "pp"] as const).map((f) => (
@@ -127,6 +109,50 @@ export default function MoveList({ moves }: { moves: MoveDetail[] }) {
             ))}
           </div>
         </div>
+
+        {/* Selected tags box */}
+        <div className={styles.tagBox}>
+          {activeTags.length === 0 ? (
+            <span className={styles.tagPlaceholder}>Click types or classes below to filter…</span>
+          ) : (
+            activeTags.map(({ key, label, kind }) => (
+              <button
+                key={key}
+                className={`${styles.tag} ${kind === "type" ? styles[key] : styles[`class${key[0].toUpperCase()}${key.slice(1)}`]}`}
+                onClick={() => kind === "type" ? toggleType(key) : toggleClass(key)}
+              >
+                {label} ×
+              </button>
+            ))
+          )}
+        </div>
+
+        {/* Type grid */}
+        <div className={styles.typeGrid}>
+          {allTypes.map((t) => (
+            <button
+              key={t}
+              className={`${styles.typePill} ${styles[t]} ${typeFilters.has(t) ? styles.active : ""}`}
+              onClick={() => toggleType(t)}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+
+        {/* Class pills */}
+        <div className={styles.pillGroup}>
+          {(["physical", "special", "status"] as const).map((c) => (
+            <button
+              key={c}
+              className={`${styles.classPill} ${styles[`class${c[0].toUpperCase()}${c.slice(1)}`]} ${classFilters.has(c) ? styles.active : ""}`}
+              onClick={() => toggleClass(c)}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+
       </div>
 
       {isFiltered && (
