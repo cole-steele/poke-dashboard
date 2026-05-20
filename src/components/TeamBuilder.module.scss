@@ -8,6 +8,21 @@
   width: 100%;
 }
 
+.errorMessage {
+  margin: 0;
+  border: 1px solid rgba(192, 57, 43, 0.25);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: #c0392b;
+  background: rgba(192, 57, 43, 0.06);
+  font-size: 13px;
+
+  @include m.dark {
+    color: #ef9a9a;
+    background: rgba(192, 57, 43, 0.14);
+  }
+}
+
 // ── Toolbar ────────────────────────────────────────────────
 
 .toolbar {
@@ -72,6 +87,7 @@
   transition: border-color 0.15s ease;
 
   &:focus { border-color: #888; }
+  &:disabled { opacity: 0.45; cursor: default; }
 
   @include m.dark { border-color: #333; &:focus { border-color: #888; } }
 }
@@ -102,6 +118,7 @@
   transition: opacity 0.15s ease;
 
   &:hover { opacity: 1; }
+  &:disabled { opacity: 0.25; cursor: default; }
 
   @include m.dark { border-color: #333; }
 }
@@ -161,14 +178,35 @@
   transition: opacity 0.15s ease;
 
   &:hover { opacity: 1; }
+  &:disabled { opacity: 0.2; cursor: default; }
 }
 
 .noTemplates {
   padding: 32px 20px;
-  font-size: 14px;
-  opacity: 0.4;
   text-align: center;
+}
+
+.emptyTeam {
+  border: 1px dashed #d8d8d8;
+  border-radius: 10px;
+  padding: 24px;
+
+  @include m.dark {
+    border-color: #333;
+  }
+}
+
+.emptyTitle {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.emptyText {
   margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0.55;
 }
 
 // ── Saved templates ────────────────────────────────────────
@@ -243,6 +281,7 @@
   transition: border-color 0.15s ease;
 
   &:hover { border-color: #888; }
+  &:disabled { opacity: 0.4; cursor: default; border-color: #e0e0e0; }
 
   @include m.dark { border-color: #333; &:hover { border-color: #888; } }
 }
@@ -259,6 +298,7 @@
   transition: opacity 0.15s ease;
 
   &:hover { opacity: 1; }
+  &:disabled { opacity: 0.18; cursor: default; }
 }
 
 // ── Team slots ─────────────────────────────────────────────
@@ -312,6 +352,11 @@
   }
 }
 
+.slotPending {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
 .addLabel {
   font-size: 28px;
   font-weight: 300;
@@ -332,6 +377,7 @@
   color: var(--foreground);
   transition: opacity 0.15s ease;
   &:hover { opacity: 1; }
+  &:disabled { opacity: 0.15; cursor: default; }
 }
 
 .slotName {
@@ -406,6 +452,11 @@
     border-color: #aaa;
     background-color: rgba(0,0,0,0.03);
   }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
 }
 
 .pickerName {
@@ -445,12 +496,84 @@
 }
 
 .coverageLabel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  opacity: 0.4;
   margin: 0;
+}
+
+.coverageLabelText {
+  opacity: 0.4;
+}
+
+.stabTerm {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tooltipWrap {
+  position: relative;
+  display: inline-flex;
+  opacity: 1;
+}
+
+.helpTip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.4;
+  cursor: help;
+}
+
+.tooltipText {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  z-index: 2;
+  width: 220px;
+  padding: 8px 10px;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  background: var(--background);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  color: var(--foreground);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.35;
+  text-transform: none;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+
+  @include m.dark {
+    border-color: #333;
+  }
+}
+
+.tooltipWrap:hover .tooltipText,
+.tooltipWrap:focus-within .tooltipText {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tooltipWrap:hover .helpTip,
+.tooltipWrap:focus-within .helpTip {
+  opacity: 0.7;
 }
 
 .typeRow {
@@ -501,6 +624,26 @@
   @include m.dark {
     background: rgba(39, 174, 96, 0.2);
     color: #81c784;
+  }
+}
+
+.offense {
+  background: rgba(47, 128, 237, 0.1);
+  color: #2f80ed;
+
+  @include m.dark {
+    background: rgba(47, 128, 237, 0.2);
+    color: #90caf9;
+  }
+}
+
+.duplicate {
+  background: rgba(127, 90, 240, 0.1);
+  color: #6c5ce7;
+
+  @include m.dark {
+    background: rgba(127, 90, 240, 0.22);
+    color: #b7a7ff;
   }
 }
 

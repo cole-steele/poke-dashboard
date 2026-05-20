@@ -45,14 +45,29 @@ function defensiveMultipliers(types: string[]): Record<string, number> {
 
 export interface TeamCoverage {
   weaknesses: { type: string; count: number; max: number }[];
+  majorWeaknesses: { type: string; count: number; max: number }[];
   resistances: { type: string; count: number }[];
   immunities: string[];
+  noResistance: string[];
+  bestOffensiveTypes: { type: string; coveredCount: number }[];
+  duplicateTypes: { type: string; count: number }[];
+  effectiveAgainst: string[];
   uncovered: string[];
 }
 
 export function getTeamCoverage(team: PokemonListItem[]): TeamCoverage {
   if (team.length === 0) {
-    return { weaknesses: [], resistances: [], immunities: [], uncovered: [] };
+    return {
+      weaknesses: [],
+      majorWeaknesses: [],
+      resistances: [],
+      immunities: [],
+      noResistance: [],
+      bestOffensiveTypes: [],
+      duplicateTypes: [],
+      effectiveAgainst: [],
+      uncovered: [],
+    };
   }
 
   const memberCharts = team.map((p) => defensiveMultipliers(p.types));
@@ -60,6 +75,7 @@ export function getTeamCoverage(team: PokemonListItem[]): TeamCoverage {
   const weaknesses: { type: string; count: number; max: number }[] = [];
   const resistances: { type: string; count: number }[] = [];
   const immunities: string[] = [];
+  const noResistance: string[] = [];
 
   for (const atk of ALL_TYPES) {
     const mults = memberCharts.map((c) => c[atk]);
@@ -67,6 +83,10 @@ export function getTeamCoverage(team: PokemonListItem[]): TeamCoverage {
     const resistCount = mults.filter((m) => m > 0 && m < 1).length;
     const immuneCount = mults.filter((m) => m === 0).length;
     const maxMult = Math.max(...mults);
+
+    if (resistCount === 0 && immuneCount === 0) {
+      noResistance.push(atk);
+    }
 
     if (immuneCount > 0 && weakCount === 0) {
       immunities.push(atk);
@@ -79,6 +99,7 @@ export function getTeamCoverage(team: PokemonListItem[]): TeamCoverage {
 
   weaknesses.sort((a, b) => b.count - a.count || b.max - a.max);
   resistances.sort((a, b) => b.count - a.count);
+  const majorWeaknesses = weaknesses.filter((w) => w.count >= 3);
 
   const teamTypes = [...new Set(team.flatMap((p) => p.types))];
   const covered = new Set(
@@ -86,7 +107,34 @@ export function getTeamCoverage(team: PokemonListItem[]): TeamCoverage {
       teamTypes.some((atk) => effectiveness(atk as TypeName, def) > 1)
     )
   );
+  const effectiveAgainst = ALL_TYPES.filter((def) => covered.has(def));
   const uncovered = ALL_TYPES.filter((def) => !covered.has(def));
+  const bestOffensiveTypes = teamTypes
+    .map((type) => ({
+      type,
+      coveredCount: ALL_TYPES.filter(
+        (def) => effectiveness(type as TypeName, def) > 1
+      ).length,
+    }))
+    .filter(({ coveredCount }) => coveredCount > 0)
+    .sort((a, b) => b.coveredCount - a.coveredCount || a.type.localeCompare(b.type))
+    .slice(0, 5);
+  const duplicateTypes = ALL_TYPES.map((type) => ({
+    type,
+    count: team.filter((pokemon) => pokemon.types.includes(type)).length,
+  }))
+    .filter(({ count }) => count > 1)
+    .sort((a, b) => b.count - a.count || a.type.localeCompare(b.type));
 
-  return { weaknesses, resistances, immunities, uncovered };
+  return {
+    weaknesses,
+    majorWeaknesses,
+    resistances,
+    immunities,
+    noResistance,
+    bestOffensiveTypes,
+    duplicateTypes,
+    effectiveAgainst,
+    uncovered,
+  };
 }
