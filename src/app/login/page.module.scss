@@ -104,6 +104,19 @@
   }
 }
 
+.forgotLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  color: var(--foreground);
+  opacity: 0.5;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover { opacity: 0.8; }
+}
+
 .submit {
   padding: 10px;
   background-color: var(--foreground);

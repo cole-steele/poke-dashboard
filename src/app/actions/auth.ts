@@ -67,3 +67,31 @@ export async function signOut() {
   await supabase.auth.signOut();
   redirect("/login");
 }
+
+export async function sendPasswordReset(
+  _prev: { error?: string; sent?: boolean } | null,
+  formData: FormData
+): Promise<{ error?: string; sent?: boolean }> {
+  const email = (formData.get("email") as string)?.trim();
+  if (!email) return { error: "Email is required." };
+
+  const supabase = await createClient();
+  await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: "https://teamdex.live/auth/callback?next=/reset-password",
+  });
+  // Always return sent to avoid leaking whether an email is registered
+  return { sent: true };
+}
+
+export async function updatePassword(
+  _prev: { error?: string; success?: boolean } | null,
+  formData: FormData
+): Promise<{ error?: string; success?: boolean }> {
+  const password = formData.get("password") as string;
+  if (!password || password.length < 8) return { error: "Password must be at least 8 characters." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return { error: error.message };
+  return { success: true };
+}
