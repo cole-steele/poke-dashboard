@@ -146,6 +146,13 @@ export async function saveTemplate(name: string, slots: (string | null)[]): Prom
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "Sign in to save team templates." };
 
+  const { count, error: countError } = await supabase
+    .from("team_templates")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id);
+  if (countError) return { ok: false, error: "Could not check template count." };
+  if ((count ?? 0) >= 20) return { ok: false, error: "You can save up to 20 team templates." };
+
   const { data, error } = await supabase
     .from("team_templates")
     .insert({ user_id: user.id, name: normalizedName, slots: normalizedSlots.map((s) => s ?? "") })
