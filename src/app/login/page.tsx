@@ -12,22 +12,23 @@ function safeNextPath(next: string | string[] | undefined): string {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string | string[] }>;
+  searchParams: Promise<{ next?: string | string[]; verified?: string }>;
 }) {
-  const { next } = await searchParams;
+  const { next, verified } = await searchParams;
   const nextPath = safeNextPath(next);
+  const isVerified = verified === "1";
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user) {
+  if (user && !isVerified) {
     redirect(nextPath);
   }
 
   return (
     <div className={styles.page}>
-      <LoginForm nextPath={nextPath} />
+      <LoginForm nextPath={nextPath} verified={isVerified} />
     </div>
   );
 }

@@ -4,11 +4,14 @@ import { useActionState, useState } from "react";
 import { signIn, signUp } from "@/app/actions/auth";
 import styles from "./page.module.scss";
 
-export default function LoginForm({ nextPath }: { nextPath: string }) {
+export default function LoginForm({ nextPath, verified }: { nextPath: string; verified?: boolean }) {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [confirmError, setConfirmError] = useState<string | null>(null);
   const [signInState, signInAction, signingIn] = useActionState(signIn, null);
-  const [signUpState, signUpAction, signingUp] = useActionState(signUp, null);
+  const [signUpState, signUpAction, signingUp] = useActionState<
+    { error?: string; checkEmail?: boolean } | null,
+    FormData
+  >(signUp, null);
 
   const isSignIn = mode === "signin";
   const pending = isSignIn ? signingIn : signingUp;
@@ -47,6 +50,13 @@ export default function LoginForm({ nextPath }: { nextPath: string }) {
         </button>
       </div>
 
+      {verified && (
+        <p className={styles.notice}>Email confirmed! You&apos;re signed in — <a href="/">go home</a>.</p>
+      )}
+
+      {signUpState?.checkEmail ? (
+        <p className={styles.notice}>Check your inbox for a confirmation link.</p>
+      ) : (
       <form action={isSignIn ? signInAction : signUpAction} onSubmit={handleSubmit} className={styles.form}>
         <input type="hidden" name="next" value={nextPath} />
         <label className={styles.label}>
@@ -91,6 +101,7 @@ export default function LoginForm({ nextPath }: { nextPath: string }) {
           {pending ? "..." : isSignIn ? "Sign in" : "Sign up"}
         </button>
       </form>
+      )}
     </div>
   );
 }

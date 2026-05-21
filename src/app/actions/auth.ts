@@ -45,21 +45,21 @@ export async function signIn(
 }
 
 export async function signUp(
-  _prev: { error: string } | null,
+  _prev: { error?: string; checkEmail?: boolean } | null,
   formData: FormData
-): Promise<{ error: string }> {
+): Promise<{ error?: string; checkEmail?: boolean }> {
   const ip = await getClientIp();
   if (isRateLimited(ip)) {
     return { error: "Too many signup attempts. Please try again later." };
   }
-  const next = safeNextPath(formData);
   const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
     email: formData.get("email") as string,
     password: formData.get("password") as string,
+    options: { emailRedirectTo: "https://teamdex.live/login?verified=1" },
   });
   if (error) return { error: error.message };
-  redirect(next);
+  return { checkEmail: true };
 }
 
 export async function signOut() {

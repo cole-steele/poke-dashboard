@@ -94,6 +94,16 @@
   margin: 0;
 }
 
+.notice {
+  font-size: 13px;
+  color: #2f855a;
+  margin: 0;
+
+  @include m.dark {
+    color: #68d391;
+  }
+}
+
 .submit {
   padding: 10px;
   background-color: var(--foreground);
